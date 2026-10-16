@@ -1,0 +1,725 @@
+/* ==========================================================================
+   Bhairavi Thul — Portfolio Design System
+   Tokens first, then base styles, then layout (12-col bento), then components.
+   Structure: Color (60-30-10) → Typography (Desktop / Mobile modes) →
+              Spacing, radius, motion, grid → Base → Layout → Components
+   ========================================================================== */
+
+/* Fonts: Inter (sans) + Source Serif 4 (serif). Apple system fonts load first
+   on Apple devices, so the page looks native there and falls back gracefully. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap");
+
+
+/* ==========================================================================
+   1. TOKENS
+   ========================================================================== */
+:root {
+
+  /* ---- 1.1 Color: 60-30-10 ----------------------------------------------
+     60%  Burgundy neutral  → page background
+     30%  Neutral 02        → cards, surfaces, stat tiles
+     10%  Accent            → CTAs and the odd moment you want noticed
+     Values are matched by eye to your palette screenshot; swap in exact hex
+     from Figma if you have it. */
+
+  --color-burgundy-neutral: #1c0e12;   /* 60% — base background */
+  --color-neutral-02:       #2b1d21;   /* 30% — surfaces */
+  --color-accent:           #bd1b42;   /* 10% — CTA (a touch brighter than the brand burgundy) */
+
+  --color-text-01: #f7e8ea;            /* headings / titles */
+  --color-text-02: #c2a6ac;            /* body content, labels */
+
+  /* Supporting tokens (derived, use sparingly) */
+  --color-burgundy-glow:  #5a1626;     /* soft background glow behind cards */
+  --color-accent-hover:   #d42550;
+  --color-accent-press:   #a3173a;
+  --color-on-accent:      #ffffff;
+  --color-border:         color-mix(in srgb, var(--color-text-01) 10%, transparent);
+  --color-surface:        color-mix(in srgb, var(--color-neutral-02) 60%, transparent);
+  --color-focus-ring:     #ff8fa8;
+
+
+  /* ---- 1.2 Typography: families ------------------------------------------ */
+  --font-sans:  "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+                "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: "New York", "Source Serif 4", "Iowan Old Style", Georgia, "Times New Roman", serif;
+
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+
+
+  /* ---- 1.3 Typography: scale — DESKTOP mode (default) -------------------
+     Headings = sans. Content = serif (a little more leading, as serifs need).
+     Sizes in rem (1rem = 16px) so they respect user zoom settings. */
+
+  /* Headings (sans) */
+  --heading-lg-size: 2.75rem;     /* 44 */
+  --heading-lg-line: 3.25rem;     /* 52 */
+  --heading-lg-track: -0.022em;
+
+  --heading-md-size: 1.75rem;     /* 28 */
+  --heading-md-line: 2.25rem;     /* 36 */
+  --heading-md-track: -0.015em;
+
+  --heading-sm-size: 1.25rem;     /* 20 */
+  --heading-sm-line: 1.75rem;     /* 28 */
+  --heading-sm-track: -0.01em;
+
+  /* Content (serif) */
+  --content-lg-size: 1.25rem;     /* 20 */
+  --content-lg-line: 2rem;        /* 32 */
+
+  --content-md-size: 1.0625rem;   /* 17 */
+  --content-md-line: 1.75rem;     /* 28 */
+
+  --content-sm-size: 0.875rem;    /* 14 */
+  --content-sm-line: 1.375rem;    /* 22 */
+
+
+  /* ---- 1.4 Spacing (4pt grid), radius, motion ---------------------------- */
+  --space-1: 0.25rem;  --space-2: 0.5rem;   --space-3: 0.75rem;
+  --space-4: 1rem;     --space-5: 1.5rem;   --space-6: 2rem;
+  --space-7: 3rem;     --space-8: 4rem;     --space-9: 6rem;
+
+  --radius-sm:   12px;   /* buttons, chips */
+  --radius-md:   20px;   /* stat tiles, project cards, thin strips */
+  --radius-lg:   32px;   /* bento blocks */
+  --radius-pill: 999px;
+
+  --content-max-width: 1120px;
+  --measure: 62ch;       /* comfortable line length for content text */
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+
+
+  /* ---- 1.5 Grid ----------------------------------------------------------
+     12 columns on every screen size. One gap value, so bento gaps never drift.
+     Pad = space between the screen edge and the content. */
+  --grid-columns: 12;
+  --grid-gap: var(--space-5);    /* 24 desktop */
+  --page-pad: var(--space-5);
+}
+
+
+/* ==========================================================================
+   2. RESPONSIVE MODES
+      Four screen sizes (media queries can't read variables, so these numbers
+      are written out wherever they are used):
+
+        phone    575px and below      1 column, stacked
+        small    576px – 767px        stacked, a little more room
+        medium   768px – 1023px       tablet / small laptop, simplified bento
+        desktop  1024px and up        the full bento
+
+      Phone + small share MOBILE MODE, which follows Apple's iOS Human
+      Interface Guidelines sizes (Large Title 34, Title 2 22, Headline 17,
+      Body 17, Callout 16, Footnote 13).
+   ========================================================================== */
+@media (max-width: 767px) {
+  :root {
+    --heading-lg-size: 2.125rem;    /* 34 — Large Title */
+    --heading-lg-line: 2.5625rem;   /* 41 */
+    --heading-lg-track: 0.01em;
+
+    --heading-md-size: 1.375rem;    /* 22 — Title 2 */
+    --heading-md-line: 1.75rem;     /* 28 */
+    --heading-md-track: 0.01em;
+
+    --heading-sm-size: 1.0625rem;   /* 17 — Headline */
+    --heading-sm-line: 1.375rem;    /* 22 */
+    --heading-sm-track: -0.005em;
+
+    --content-lg-size: 1.0625rem;   /* 17 — Body */
+    --content-lg-line: 1.625rem;    /* 26 */
+
+    --content-md-size: 1rem;        /* 16 — Callout */
+    --content-md-line: 1.5rem;      /* 24 */
+
+    --content-sm-size: 0.8125rem;   /* 13 — Footnote */
+    --content-sm-line: 1.125rem;    /* 18 */
+
+    --radius-lg: 24px;
+    --radius-md: 16px;
+
+    --grid-gap: var(--space-4);     /* 16 mobile */
+    --page-pad: var(--space-4);
+  }
+}
+
+
+/* Small screens (576–767px): same type as phone, a little more breathing room */
+@media (min-width: 576px) and (max-width: 767px) {
+  :root { --page-pad: var(--space-5); }
+}
+
+/* Medium screens (768–1023px): desktop type, one step down on the big headings */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --heading-lg-size: 2.5rem;      /* 40 */
+    --heading-lg-line: 3rem;        /* 48 */
+    --heading-md-size: 1.625rem;    /* 26 */
+    --heading-md-line: 2.125rem;    /* 34 */
+  }
+}
+
+
+/* ==========================================================================
+   3. BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--color-text-02);
+  font-family: var(--font-serif);
+  font-size: var(--content-md-size);
+  line-height: var(--content-md-line);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+
+  /* 60%: burgundy base with two soft glows, like your current page */
+  background-color: var(--color-burgundy-neutral);
+  background-image:
+    radial-gradient(60% 45% at 12% 20%, color-mix(in srgb, var(--color-burgundy-glow) 70%, transparent), transparent 70%),
+    radial-gradient(50% 40% at 88% 55%, color-mix(in srgb, var(--color-burgundy-glow) 45%, transparent), transparent 70%);
+  background-attachment: fixed;
+}
+
+/* Headings: sans */
+h1, h2, h3, .heading-lg, .heading-md, .heading-sm {
+  margin: 0;
+  color: var(--color-text-01);
+  font-family: var(--font-sans);
+  font-weight: var(--weight-semibold);
+}
+h1, .heading-lg { font-size: var(--heading-lg-size); line-height: var(--heading-lg-line); letter-spacing: var(--heading-lg-track); }
+h2, .heading-md { font-size: var(--heading-md-size); line-height: var(--heading-md-line); letter-spacing: var(--heading-md-track); }
+h3, .heading-sm { font-size: var(--heading-sm-size); line-height: var(--heading-sm-line); letter-spacing: var(--heading-sm-track); }
+
+/* Content: serif */
+p, .content-md { margin: 0; font-size: var(--content-md-size); line-height: var(--content-md-line); max-width: var(--measure); }
+.content-lg    { font-size: var(--content-lg-size); line-height: var(--content-lg-line); }
+.content-sm    { font-size: var(--content-sm-size); line-height: var(--content-sm-line); }
+
+/* Utility: text colors and families */
+.text-01 { color: var(--color-text-01); }
+.text-02 { color: var(--color-text-02); }
+.font-sans  { font-family: var(--font-sans); }
+.font-serif { font-family: var(--font-serif); }
+
+/* UI labels (small sans text: stat captions, "swipe for more", tags) */
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--content-sm-size);
+  line-height: var(--content-sm-line);
+  color: var(--color-text-02);
+}
+
+a { color: inherit; }
+
+img, svg, video { max-width: 100%; display: block; }
+
+/* Keyboard focus: always visible */
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.container {
+  width: min(100% - 2 * var(--page-pad), var(--content-max-width));
+  margin-inline: auto;
+}
+
+/* Screen-reader-only text (for icon-only links like LinkedIn) */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ==========================================================================
+   4. LAYOUT — 12-column bento grid
+   How it works:
+     <div class="bento">
+       <section class="card d-12 m-12">…</section>   hero
+       <section class="card d-5  m-12">…</section>   featured
+       <section class="card d-7  m-12">…</section>   other projects
+     </div>
+   Column classes, one set per screen size:
+     d-N   desktop  (1024px and up)
+     md-N  medium   (768–1023px)   falls back to d-N if not set
+     sm-N  small    (576–767px)    falls back to m-N if not set
+     m-N   phone    (575px and down)
+   Anything without a class spans the full 12 columns.
+   ========================================================================== */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+/* Default: every direct child spans the full row */
+.bento > * {
+  grid-column: span var(--span-m, 12);
+  min-width: 0;                       /* stops long content stretching a column */
+}
+@media (min-width: 576px) {
+  .bento > * { grid-column: span var(--span-sm, var(--span-m, 12)); }
+}
+@media (min-width: 768px) {
+  .bento > * { grid-column: span var(--span-md, var(--span-d, 12)); }
+}
+@media (min-width: 1024px) {
+  .bento > * { grid-column: span var(--span-d, 12); }
+}
+
+/* Span helpers: 1–12, for each mode */
+.d-1  { --span-d: 1; }   .m-1  { --span-m: 1; }
+.d-2  { --span-d: 2; }   .m-2  { --span-m: 2; }
+.d-3  { --span-d: 3; }   .m-3  { --span-m: 3; }
+.d-4  { --span-d: 4; }   .m-4  { --span-m: 4; }
+.d-5  { --span-d: 5; }   .m-5  { --span-m: 5; }
+.d-6  { --span-d: 6; }   .m-6  { --span-m: 6; }
+.d-7  { --span-d: 7; }   .m-7  { --span-m: 7; }
+.d-8  { --span-d: 8; }   .m-8  { --span-m: 8; }
+.d-9  { --span-d: 9; }   .m-9  { --span-m: 9; }
+.d-10 { --span-d: 10; }  .m-10 { --span-m: 10; }
+.d-11 { --span-d: 11; }  .m-11 { --span-m: 11; }
+.d-12 { --span-d: 12; }  .m-12 { --span-m: 12; }
+
+/* Medium and small helpers: 1–12 */
+.md-1 { --span-md: 1; }  .sm-1 { --span-sm: 1; }
+.md-2 { --span-md: 2; }  .sm-2 { --span-sm: 2; }
+.md-3 { --span-md: 3; }  .sm-3 { --span-sm: 3; }
+.md-4 { --span-md: 4; }  .sm-4 { --span-sm: 4; }
+.md-5 { --span-md: 5; }  .sm-5 { --span-sm: 5; }
+.md-6 { --span-md: 6; }  .sm-6 { --span-sm: 6; }
+.md-7 { --span-md: 7; }  .sm-7 { --span-sm: 7; }
+.md-8 { --span-md: 8; }  .sm-8 { --span-sm: 8; }
+.md-9 { --span-md: 9; }  .sm-9 { --span-sm: 9; }
+.md-10 { --span-md: 10; }  .sm-10 { --span-sm: 10; }
+.md-11 { --span-md: 11; }  .sm-11 { --span-sm: 11; }
+.md-12 { --span-md: 12; }  .sm-12 { --span-sm: 12; }
+
+/* Page rhythm */
+/* Header: stays on top while scrolling, hazy glass over whatever passes beneath */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding-block: var(--space-3);
+  margin-bottom: var(--space-5);
+  background: color-mix(in srgb, var(--color-burgundy-neutral) 55%, transparent);
+  border-bottom: 1px solid var(--color-border);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+          backdrop-filter: blur(20px) saturate(140%);
+}
+.site-main   { padding-bottom: var(--space-7); }
+
+/* Simple vertical stack with consistent spacing */
+.stack   { display: flex; flex-direction: column; gap: var(--space-4); }
+.stack-lg { display: flex; flex-direction: column; gap: var(--space-6); }
+
+/* Inline row that wraps */
+.cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+
+
+/* ==========================================================================
+   5. COMPONENTS
+   ========================================================================== */
+
+/* Card — the 30% surface */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.card--tile  { border-radius: var(--radius-md); padding: var(--space-5); }
+/* Thin full-width blocks (clients strip, connect CTA) */
+.card--strip { border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); }
+
+/* Primary button — the 10% accent */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border: 0;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: var(--heading-sm-size);
+  line-height: 1.2;
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease), transform var(--duration-fast) var(--ease);
+}
+.btn--primary { background: var(--color-accent); color: var(--color-on-accent); }
+.btn--primary:hover  { background: var(--color-accent-hover); }
+.btn--primary:active { background: var(--color-accent-press); transform: translateY(1px); }
+
+/* Secondary: text link with underline, like "See the work" */
+.btn--link {
+  padding-inline: var(--space-2);
+  background: transparent;
+  color: var(--color-text-02);
+  border-radius: 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.btn--link:hover { color: var(--color-text-01); border-bottom-color: var(--color-text-02); }
+
+/* Tag / chip — handy for the playlist easter egg and project tags */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-sans);
+  font-size: var(--content-sm-size);
+  line-height: var(--content-sm-line);
+  color: var(--color-text-02);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease);
+}
+.tag:hover { color: var(--color-text-01); border-color: var(--color-text-02); }
+
+/* Icon-only link (LinkedIn in the nav, on testimonials) */
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-02);
+  transition: color var(--duration-fast) var(--ease), background-color var(--duration-fast) var(--ease);
+}
+.icon-link:hover { color: var(--color-text-01); background: var(--color-surface); }
+
+.site-nav img { height: 2.5rem; width: auto; }
+
+/* Right side of the nav: Work, Email, LinkedIn */
+.nav-actions { display: flex; align-items: center; gap: var(--space-1); }
+button.icon-link { border: 0; background: transparent; cursor: pointer; padding: 0; font: inherit; }
+
+/* Email popover — opens under the email icon on hover / keyboard focus / tap.
+   The popover has its own top padding so the pointer can travel from the icon
+   to the box without the popover closing. */
+.email-pop { position: relative; }
+.popover {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  padding-top: var(--space-2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity var(--duration-fast) var(--ease), transform var(--duration-fast) var(--ease), visibility var(--duration-fast);
+}
+.email-pop:hover .popover,
+.email-pop:has(:focus-visible) .popover,
+.email-pop.is-open .popover {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.popover__box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  background: var(--color-neutral-02);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--color-burgundy-neutral) 80%, transparent);
+}
+.popover__text {
+  font-family: var(--font-sans);
+  font-size: var(--content-sm-size);
+  line-height: var(--content-sm-line);
+  color: var(--color-text-01);
+  white-space: nowrap;
+}
+/* Copy icon swaps to a tick once copied */
+.icon-check { display: none; }
+[data-copy-email].is-copied .icon-copy,
+[data-copy-inline].is-copied .icon-copy { display: none; }
+[data-copy-email].is-copied .icon-check,
+[data-copy-inline].is-copied .icon-check { display: block; color: var(--color-text-01); }
+
+/* Top nav: logo left, actions right */
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Stat tiles row inside the hero (three equal tiles; stack on mobile) */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+@media (max-width: 767px) {
+  .stats { grid-template-columns: 1fr; }
+}
+.stat__value {
+  font-family: var(--font-serif);
+  font-size: var(--heading-md-size);
+  line-height: var(--heading-md-line);
+  color: var(--color-text-01);
+}
+
+/* Clients strip: logos in a row, wraps on mobile */
+.logo-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-6);
+}
+
+/* Marquee — infinite logo ticker. Put two identical .marquee__group blocks
+   inside .marquee__track (mark the second aria-hidden). Pauses on hover.
+   Speed: set --marquee-duration on .marquee (default 30s). */
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 30s) linear infinite;
+}
+.marquee:hover .marquee__track { animation-play-state: paused; }
+.marquee__group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--space-9);
+  padding-right: var(--space-9);   /* group must be wider than the strip so there is never a gap */
+}
+@media (max-width: 767px) {
+  .marquee__group { gap: var(--space-7); padding-right: var(--space-7); }
+}
+.marquee__group img {
+  height: var(--h, 2rem);
+  width: auto;
+  opacity: 0.85;                      /* white logos, slightly softened */
+  transition: opacity var(--duration-fast) var(--ease);
+}
+.marquee__group img:hover { opacity: 1; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* Horizontal scroller — "swipe for more" project cards */
+.scroller {
+  display: flex;
+  gap: var(--grid-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: var(--space-2);
+}
+.scroller > * {
+  flex: 0 0 min(80%, 22rem);
+  scroll-snap-align: start;
+}
+
+/* Peek scroller: shows whole cards plus a slice of the next one.
+   2.5 cards on every screen except phone, which shows 1.5 (--peek-gaps = gaps between visible cards). */
+.scroller--peek { --peek: 2.5; --peek-gaps: 2; }
+.scroller--peek > * { flex: 0 0 calc((100% - var(--peek-gaps) * var(--grid-gap)) / var(--peek)); }
+@media (max-width: 575px) {
+  .scroller--peek { --peek: 1.5; --peek-gaps: 1; }
+}
+
+/* Footer: three parts on one row, stacked and centred on mobile */
+.site-footer {
+  padding-block: var(--space-5);
+  font-family: var(--font-sans);
+  font-size: var(--content-sm-size);
+  line-height: var(--content-sm-line);
+  color: var(--color-text-02);
+}
+.site-footer__inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap);
+  align-items: center;
+}
+.site-footer__inner > :nth-child(2) { text-align: center; }
+.site-footer__inner > :nth-child(3) { text-align: right; }
+@media (max-width: 767px) {
+  .site-footer__inner { grid-template-columns: 1fr; text-align: center; }
+  .site-footer__inner > :nth-child(n) { text-align: center; }
+}
+
+/* Case study pages */
+.page-hero { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+.prose > * + * { margin-top: var(--space-4); }
+.figure-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); margin-top: var(--space-5); }
+@media (max-width: 575px) { .figure-row { grid-template-columns: 1fr; } }
+.next-project { display: flex; align-items: center; justify-content: space-between; gap: var(--space-5); flex-wrap: wrap; text-decoration: none; }
+.next-project:hover .heading-sm { color: var(--color-accent-hover); }
+
+/* Case study summary: Problem / My role / Result at a glance */
+.summary { width: 100%; margin: var(--space-3) 0 0; border-top: 1px solid var(--color-border); }
+.summary__row { display: grid; grid-template-columns: 8rem 1fr; gap: var(--space-4); padding-block: var(--space-4); border-bottom: 1px solid var(--color-border); }
+.summary dt { font-family: var(--font-sans); font-size: var(--content-sm-size); line-height: var(--content-sm-line); color: var(--color-text-02); }
+.summary dd { margin: 0; font-size: var(--content-md-size); line-height: var(--content-md-line); color: var(--color-text-01); }
+@media (max-width: 575px) { .summary__row { grid-template-columns: 1fr; gap: var(--space-1); } }
+
+/* Placeholder box: swap for a real image */
+.placeholder {
+  display: flex; align-items: center; justify-content: center;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-family: var(--font-sans);
+  font-size: var(--content-sm-size);
+  color: var(--color-text-02);
+}
+.placeholder--cover { aspect-ratio: 16 / 9; border-radius: var(--radius-lg); }
+.placeholder--figure { aspect-ratio: 4 / 3; }
+
+/* Long-form case study
+   The hero has no card: it sits straight on the background and scales fluidly
+   (clamp) instead of jumping at breakpoints. */
+[id^="sec-"] { scroll-margin-top: 6rem; }
+
+.cs-hero {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: clamp(var(--space-3), 2vw, var(--space-5));
+  padding-block: clamp(var(--space-4), 4vw, var(--space-7)) clamp(var(--space-4), 3vw, var(--space-6));
+}
+.cs-title {
+  font-size: clamp(2.25rem, 1.1rem + 5vw, 4.5rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+}
+.cs-cover { margin: 0; width: 100%; }
+.cs-cover img {
+  width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.cs-quote {
+  max-width: 48rem; margin-inline: auto; text-align: left;
+  padding-left: clamp(var(--space-4), 2vw, var(--space-5));
+  border-left: 2px solid color-mix(in srgb, var(--color-text-01) 30%, transparent);
+  font-size: clamp(var(--content-md-size), 0.9rem + 0.6vw, var(--content-lg-size));
+  line-height: 1.7; font-style: italic; color: var(--color-text-01);
+}
+.cs-meta {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: var(--space-4) clamp(var(--space-5), 5vw, var(--space-8));
+  width: 100%; margin: 0; padding-block: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+.cs-meta dt { font-family: var(--font-sans); font-size: var(--content-sm-size); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-02); }
+.cs-meta dd { margin: var(--space-1) 0 0; font-family: var(--font-sans); font-weight: var(--weight-semibold); color: var(--color-text-01); }
+
+.badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 1.75rem; height: 1.75rem; margin-right: var(--space-3);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  color: var(--color-text-01);
+  font-family: var(--font-sans); font-size: var(--content-sm-size); font-weight: 700;
+  vertical-align: middle;
+}
+.eyebrow { margin: 0; font-family: var(--font-sans); font-size: var(--content-sm-size); font-weight: var(--weight-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-02); }
+.cs-question { margin-top: var(--space-1); }
+.cs-block + .cs-block { margin-top: var(--space-7); }
+.cs-block .eyebrow { margin-bottom: var(--space-2); }
+.cs-block strong, .insights strong { color: var(--color-text-01); font-weight: var(--weight-semibold); }
+
+.insights { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: var(--grid-gap); margin-top: var(--space-4); }
+.insights h3 { margin-bottom: var(--space-2); }
+
+/* Horizontal image gallery: fixed height, width follows each picture */
+.gallery {
+  display: flex; gap: var(--space-4);
+  margin-top: var(--space-4); padding-bottom: var(--space-2);
+  overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+}
+.gallery::-webkit-scrollbar { display: none; }
+.gallery img {
+  flex: 0 0 auto; height: clamp(12rem, 8rem + 20vw, 24rem); width: auto;
+  scroll-snap-align: start;
+  border-radius: var(--radius-md); border: 1px solid var(--color-border); background: var(--color-surface);
+}
+.photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: var(--space-4); margin-top: var(--space-4); }
+.photo-grid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--color-border); background: var(--color-surface); }
+
+.stats--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.stats--two .stat__value { font-size: clamp(2rem, 1.2rem + 3vw, 3rem); line-height: 1.1; }
+@media (max-width: 575px) { .stats--two { grid-template-columns: 1fr; } }
+
+.next-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: var(--grid-gap); margin-top: var(--space-4); }
+.next-card { display: block; padding: 0; overflow: hidden; text-decoration: none; transition: transform var(--duration-base) var(--ease); }
+.next-card:hover { transform: translateY(-4px); }
+.next-card:hover h3 { color: var(--color-accent-hover); }
+.next-card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+.next-card__body { padding: var(--space-4); }
+.next-card__body p { margin-top: var(--space-1); }
+
+.connect-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-4) var(--space-5); }
+.email-block { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); }
+.email-block__row { display: flex; align-items: center; gap: var(--space-1); color: var(--color-text-01); font-family: var(--font-sans); font-weight: var(--weight-semibold); }
+
+/* Floating "Sections" outline */
+.toc { position: fixed; right: var(--space-4); bottom: var(--space-4); z-index: 60; }
+.toc__toggle {
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border); border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-neutral-02) 85%, transparent);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  color: var(--color-text-01); font-family: var(--font-sans); font-size: var(--content-sm-size); font-weight: var(--weight-semibold); cursor: pointer;
+}
+.toc__toggle svg { transition: transform var(--duration-fast) var(--ease); }
+.toc.is-open .toc__toggle svg { transform: rotate(180deg); }
+.toc__panel {
+  display: none; position: absolute; right: 0; bottom: calc(100% + var(--space-2));
+  min-width: 15rem; padding: var(--space-2);
+  background: var(--color-neutral-02); border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--color-burgundy-neutral) 80%, transparent);
+}
+.toc.is-open .toc__panel { display: flex; flex-direction: column; gap: 2px; }
+.toc__panel a { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: 8px; color: var(--color-text-01); text-decoration: none; font-family: var(--font-sans); font-size: var(--content-sm-size); }
+.toc__panel a:hover { background: var(--color-surface); }
+.toc__panel .badge { margin-right: 0; flex-shrink: 0; }
+
+/* Respect reduced-motion settings (also pause your testimonial auto-rotate in JS) */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  /* Marquee: stop moving, let people scroll the logos themselves */
+  .marquee__track { animation: none; }
+  .marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .marquee__group[aria-hidden="true"] { display: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
